@@ -45,9 +45,12 @@ async function run() {
         password: hashedPassword,
       });
 
-      res
-        .status(200)
-        .json({ message: "User created successful", status: 200, result });
+      res.status(200).json({
+        message: "User created successful",
+        status: 200,
+        result,
+        user: req.body,
+      });
     });
 
     // User login endpoint
@@ -69,8 +72,10 @@ async function run() {
           .status(401)
           .json({ message: "Invalid email or password", status: 401 });
       }
+      const users = await usersCollection.find({ email }).toArray();
+      console.log(users);
 
-      res.status(200).json({ message: "Login successful", status: 200 });
+      res.status(200).json({ message: "Login successful", status: 200, user: users[0] });
     });
 
     // ------ Authentication section  END ---------//
