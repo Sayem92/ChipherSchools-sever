@@ -73,12 +73,29 @@ async function run() {
           .json({ message: "Invalid email or password", status: 401 });
       }
       const users = await usersCollection.find({ email }).toArray();
-      console.log(users);
 
-      res.status(200).json({ message: "Login successful", status: 200, user: users[0] });
+
+      res
+        .status(200)
+        .json({ message: "Login successful", status: 200, user: users[0] });
     });
 
     // ------ Authentication section  END ---------//
+
+  
+
+    // about profile data save 
+    app.put("/profile/:email", async (req, res) => {
+      const email = req.params.email;
+      const data = req.body;
+      console.log(data, email);
+      const query = { email };
+      const update = { $set: data };
+      const options = { upsert: true };
+      const result = await usersCollection.updateOne(query, update, options);
+      res.send(result);
+
+    });
   } finally {
   }
 }
