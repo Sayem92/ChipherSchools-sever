@@ -22,6 +22,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const usersCollection = client.db("ChipherSchools").collection("allUser");
+    const followerCollection = client.db("ChipherSchools").collection("allFollowers");
 
     // ------- Authentication section start --------//
     // User registration endpoint
@@ -128,7 +129,15 @@ async function run() {
       res.send(result);
     });
 
-    
+
+    // all followers
+    app.get("/follower", async (req, res) => {
+      const query = {}
+      const result = await followerCollection.find(query).toArray()
+      res.send(result);
+    });
+
+
   } finally {
   }
 }
