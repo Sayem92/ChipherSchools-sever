@@ -45,7 +45,31 @@ async function run() {
 
       res.status(200).json({ message: "User created", status: 200, result });
     });
-    
+
+    // User login endpoint
+    app.post("/login", async (req, res) => {
+      const { email, password } = req.body;
+
+      // Check if user exists
+      const user = await usersCollection.findOne({ email });
+      if (!user) {
+        return res
+          .status(401)
+          .json({ message: "Invalid email or password", status: 401 });
+      }
+
+      // Check if password is correct
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        return res
+          .status(401)
+          .json({ message: "Invalid email or password", status: 401 });
+      }
+
+      res.status(200).json({ message: "Login successful", status: 200 });
+    });
+
+    // ------ Authentication section  END ---------//
   } finally {
   }
 }
